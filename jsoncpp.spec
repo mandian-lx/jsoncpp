@@ -5,15 +5,15 @@
 %define jsoncpp_major 0
 %define libname %mklibname %name %{jsoncpp_major}
 
-Name: 		%name
-Version: 	%version
-Release: 	%release
-Summary: 	C++ JSON Library
-License: 	Public Domain
-Group: 		Development	
-Url: 		http://jsoncpp.sourceforge.net/
+Name:       %name
+Version:    %version
+Release:    %release
+Summary:    C++ JSON Library
+License:    Public Domain
+Group:      System/Libraries
+Url:        http://jsoncpp.sourceforge.net/
 BuildRoot:  %{_tmppath}/%{name}-%{version}-root
-Source0: 	%{name}-%{version}.tar.gz
+Source0:    %{name}-%{version}.tar.gz
 
 BuildRequires: scons 
 #To generate docs
@@ -30,8 +30,8 @@ Unserialization parsing is user friendly and provides precise error reports.
 
 %package        devel
 Summary:        Development files for %{name}
-Group:          Development/Other
-Provides:	devel(libjsoncpp)
+Group:          System/Libraries
+Provides:       devel(libjsoncpp)
 
 %description    devel
 Files for building applications with %{name} support.
@@ -55,16 +55,18 @@ ln -s $LIBNAME %buildroot%{_libdir}/%{libname}
 cp %{_builddir}/%{name}-src-%{version}/include/json/* %{buildroot}%{_includedir}/jsoncpp
 
 %clean
-rm -rf %buildroot
+%{__rm} -rf %buildroot
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 
 %files
+%defattr(-,root,root)
 %doc README.txt 
 %{_libdir}/*
 
 %files devel
+%defattr(-,root,root)
 %{_includedir}/%{name}/*
 

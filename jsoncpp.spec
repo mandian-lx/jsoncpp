@@ -1,7 +1,7 @@
 
 %define name jsoncpp
 %define version 0.5.0
-%define release %mkrel 5 
+%define release %mkrel 6 
 %define jsoncpp_major 0
 %define libname %mklibname %name %{jsoncpp_major}
 %define develname %mklibname -d %name

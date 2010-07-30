@@ -4,6 +4,7 @@
 %define release %mkrel 5 
 %define jsoncpp_major 0
 %define libname %mklibname %name %{jsoncpp_major}
+%define develname %mklibname -d %name
 
 Name:       %name
 Version:    %version
@@ -28,12 +29,28 @@ making it a convenient format to store user input files.
 
 Unserialization parsing is user friendly and provides precise error reports.
 
-%package        devel
+
+%package -n %libname
+Summary:        JsonCpp library
+Group:          System/Libraries
+
+%description -n %libname
+JsonCpp is a simple API to manipulate JSON value, handle serialization 
+and unserialization to string.
+
+It can also preserve existing comment in unserialization/serialization steps,
+making it a convenient format to store user input files.
+
+Unserialization parsing is user friendly and provides precise error reports.
+
+
+
+%package -n     %{develname}
 Summary:        Development files for %{name}
 Group:          System/Libraries
-Provides:       devel(libjsoncpp)
+Requires:       %{libname} = %{version}-%{release}       
 
-%description    devel
+%description -n    %{develname}
 Files for building applications with %{name} support.
 
 %prep 
@@ -44,6 +61,7 @@ scons platform=linux-gcc
 #Docs generation is broken at the moment, return to it ASAP 
 
 %install
+%{__rm} -rf %buildroot
 #Scons file is missing an 'install' target
 #XXX: Hardcoded GCC version
 mkdir -p %buildroot%{_libdir}
@@ -60,13 +78,12 @@ cp %{_builddir}/%{name}-src-%{version}/include/json/* %{buildroot}%{_includedir}
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
-
-%files
+%files -n %libname
 %defattr(-,root,root)
 %doc README.txt 
 %{_libdir}/*
 
-%files devel
+%files -n %develname
 %defattr(-,root,root)
 %{_includedir}/%{name}/*
 

@@ -1,7 +1,7 @@
 
 %define name jsoncpp
 %define version 0.5.0
-%define release %mkrel 6 
+%define release %mkrel 7
 %define jsoncpp_major 0
 %define libname %mklibname %name %{jsoncpp_major}
 %define develname %mklibname -d %name
@@ -49,6 +49,9 @@ Unserialization parsing is user friendly and provides precise error reports.
 Summary:        Development files for %{name}
 Group:          System/Libraries
 Requires:       %{libname} = %{version}-%{release}       
+Provides:	jsoncpp-devel = %{version}-%{release}
+Provides:	libjsoncpp-devel = %{version}-%{release}
+Obsoletes:	jsoncpp-devel <= 0.5.0-5mdv2011.0
 
 %description -n    %{develname}
 Files for building applications with %{name} support.

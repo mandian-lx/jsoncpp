@@ -1,7 +1,7 @@
 
 %define name jsoncpp
 %define version 0.5.0
-%define release %mkrel 7
+%define release %mkrel 8
 %define jsoncpp_major 0
 %define libname %mklibname %name %{jsoncpp_major}
 %define develname %mklibname -d %name
@@ -72,7 +72,7 @@ mkdir -p %buildroot%{_includedir}/jsoncpp
 GCC_VERSION=`gcc --version | head -n 1 | cut -f3 -d " "` 
 LIBNAME=libjson_linux-gcc-${GCC_VERSION}_libmt.so
 cp %{_builddir}/%{name}-src-%{version}/buildscons/linux-gcc-$GCC_VERSION/src/lib_json/$LIBNAME %{buildroot}%{_libdir}
-ln -s $LIBNAME %buildroot%{_libdir}/%{libname}
+ln -s $LIBNAME %buildroot%{_libdir}/lib%{name}.so
 cp %{_builddir}/%{name}-src-%{version}/include/json/* %{buildroot}%{_includedir}/jsoncpp
 
 %clean

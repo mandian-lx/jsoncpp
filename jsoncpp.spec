@@ -1,7 +1,7 @@
 
 %define name jsoncpp
 %define version 0.5.0
-%define release %mkrel 8
+%define release %mkrel 9
 %define jsoncpp_major 0
 %define libname %mklibname %name %{jsoncpp_major}
 %define develname %mklibname -d %name
@@ -78,8 +78,8 @@ cp %{_builddir}/%{name}-src-%{version}/include/json/* %{buildroot}%{_includedir}
 %clean
 %{__rm} -rf %buildroot
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%post -n %{libname} -p /sbin/ldconfig
+%postun -n %{libname} -p /sbin/ldconfig
 
 %files -n %libname
 %defattr(-,root,root)

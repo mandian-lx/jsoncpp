@@ -2,12 +2,13 @@
 
 Name:		jsoncpp
 Version:	0.5.0
-Release:	10
+Release:	11
 Summary:	C++ JSON Library
 License:	Public Domain
 Group:		System/Libraries
 Url:		http://jsoncpp.sourceforge.net/
 Source0:	%{name}-%{version}.tar.gz
+Patch0:		jsoncpp-0.5.0-add-soname.patch
 BuildRequires:	scons 
 #To generate docs
 %if %{with docs}
@@ -52,6 +53,7 @@ Files for building applications with %{name} support.
 
 %prep 
 %setup -q -n jsoncpp-src-%{version}
+%patch0 -p1 -b .soname~
 
 %build
 scons platform=linux-gcc
@@ -63,6 +65,7 @@ scons platform=linux-gcc
 %define	gcc_ver	%(gcc -dumpversion)
 %define	library	libjson_linux-gcc-%{gcc_ver}_libmt.so
 install -m755 buildscons/linux-gcc-%{gcc_ver}/src/lib_json/%{library} -D %{buildroot}%{_libdir}/%{library}
+ln -s %{library} %{buildroot}%{_libdir}/lib%{name}.so.0
 ln -s %{library} %{buildroot}%{_libdir}/lib%{name}.so
 mkdir -p %{buildroot}%{_includedir}
 cp -r include/json %{buildroot}%{_includedir}/jsoncpp
@@ -70,8 +73,9 @@ cp -r include/json %{buildroot}%{_includedir}/jsoncpp
 %files -n %{libname}
 %doc README.txt 
 %{_libdir}/%{library}
-%{_libdir}/lib%{name}.so
+%{_libdir}/lib%{name}.so.0
 
 %files -n %{devname}
+%{_libdir}/lib%{name}.so
 %dir %{_includedir}/%{name}
 %{_includedir}/%{name}/*

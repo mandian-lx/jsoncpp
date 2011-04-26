@@ -1,24 +1,18 @@
+%bcond_with	docs
 
-%define name jsoncpp
-%define version 0.5.0
-%define release %mkrel 9
-%define jsoncpp_major 0
-%define libname %mklibname %name %{jsoncpp_major}
-%define develname %mklibname -d %name
-
-Name:       %name
-Version:    %version
-Release:    %release
-Summary:    C++ JSON Library
-License:    Public Domain
-Group:      System/Libraries
-Url:        http://jsoncpp.sourceforge.net/
-BuildRoot:  %{_tmppath}/%{name}-%{version}-root
-Source0:    %{name}-%{version}.tar.gz
-
-BuildRequires: scons 
+Name:		jsoncpp
+Version:	0.5.0
+Release:	10
+Summary:	C++ JSON Library
+License:	Public Domain
+Group:		System/Libraries
+Url:		http://jsoncpp.sourceforge.net/
+Source0:	%{name}-%{version}.tar.gz
+BuildRequires:	scons 
 #To generate docs
-#BuildRequires: doxygen, graphviz
+%if %{with docs}
+BuildRequires:	doxygen graphviz
+%endif
 
 %description
 JsonCpp is a simple API to manipulate JSON value, handle serialization 
@@ -29,12 +23,16 @@ making it a convenient format to store user input files.
 
 Unserialization parsing is user friendly and provides precise error reports.
 
+# XXX: There isn't really any major due to lack of SONAME :/
+%define major	0
+%define	libname	%mklibname %{name} %{major}
+%define	devname	%mklibname -d %{name}
 
-%package -n %libname
-Summary:        JsonCpp library
-Group:          System/Libraries
+%package -n	%{libname}
+Summary:	JsonCpp library
+Group:		System/Libraries
 
-%description -n %libname
+%description -n	%{libname}
 JsonCpp is a simple API to manipulate JSON value, handle serialization 
 and unserialization to string.
 
@@ -43,50 +41,37 @@ making it a convenient format to store user input files.
 
 Unserialization parsing is user friendly and provides precise error reports.
 
+%package -n	%{devname}
+Summary:	Development files for %{name}
+Group:		System/Libraries
+Requires:	%{libname} = %{EVRD}
+%rename		jsoncpp-devel
 
-
-%package -n     %{develname}
-Summary:        Development files for %{name}
-Group:          System/Libraries
-Requires:       %{libname} = %{version}-%{release}       
-Provides:	jsoncpp-devel = %{version}-%{release}
-Provides:	libjsoncpp-devel = %{version}-%{release}
-Obsoletes:	jsoncpp-devel <= 0.5.0-5mdv2011.0
-
-%description -n    %{develname}
+%description -n	%{devname}
 Files for building applications with %{name} support.
 
 %prep 
-%setup -q -n jsoncpp-src-%version
+%setup -q -n jsoncpp-src-%{version}
 
 %build
 scons platform=linux-gcc
 #Docs generation is broken at the moment, return to it ASAP 
 
 %install
-%{__rm} -rf %buildroot
 #Scons file is missing an 'install' target
 #XXX: Hardcoded GCC version
-mkdir -p %buildroot%{_libdir}
-mkdir -p %buildroot%{_includedir}/jsoncpp
-GCC_VERSION=`gcc --version | head -n 1 | cut -f3 -d " "` 
-LIBNAME=libjson_linux-gcc-${GCC_VERSION}_libmt.so
-cp %{_builddir}/%{name}-src-%{version}/buildscons/linux-gcc-$GCC_VERSION/src/lib_json/$LIBNAME %{buildroot}%{_libdir}
-ln -s $LIBNAME %buildroot%{_libdir}/lib%{name}.so
-cp %{_builddir}/%{name}-src-%{version}/include/json/* %{buildroot}%{_includedir}/jsoncpp
+%define	gcc_ver	%(gcc -dumpversion)
+%define	library	libjson_linux-gcc-%{gcc_ver}_libmt.so
+install -m755 buildscons/linux-gcc-%{gcc_ver}/src/lib_json/%{library} -D %{buildroot}%{_libdir}/%{library}
+ln -s %{library} %{buildroot}%{_libdir}/lib%{name}.so
+mkdir -p %{buildroot}%{_includedir}
+cp -r include/json %{buildroot}%{_includedir}/jsoncpp
 
-%clean
-%{__rm} -rf %buildroot
-
-%post -n %{libname} -p /sbin/ldconfig
-%postun -n %{libname} -p /sbin/ldconfig
-
-%files -n %libname
-%defattr(-,root,root)
+%files -n %{libname}
 %doc README.txt 
-%{_libdir}/*
+%{_libdir}/%{library}
+%{_libdir}/lib%{name}.so
 
-%files -n %develname
-%defattr(-,root,root)
+%files -n %{devname}
+%dir %{_includedir}/%{name}
 %{_includedir}/%{name}/*
-

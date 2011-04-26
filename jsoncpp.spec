@@ -9,6 +9,7 @@ Group:		System/Libraries
 Url:		http://jsoncpp.sourceforge.net/
 Source0:	%{name}-%{version}.tar.gz
 Patch0:		jsoncpp-0.5.0-add-soname.patch
+Patch1:		jsoncpp-0.5.0-cflags-ldflags.patch
 BuildRequires:	scons 
 #To generate docs
 %if %{with docs}
@@ -54,9 +55,10 @@ Files for building applications with %{name} support.
 %prep 
 %setup -q -n jsoncpp-src-%{version}
 %patch0 -p1 -b .soname~
+%patch1 -p1 -b .flags~
 
 %build
-scons platform=linux-gcc
+CXXFLAGS="%{optflags}" LINKFLAGS="%{ldflags}" scons platform=linux-gcc
 #Docs generation is broken at the moment, return to it ASAP 
 
 %install

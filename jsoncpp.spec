@@ -2,7 +2,7 @@
 
 Name:		jsoncpp
 Version:	0.5.0
-Release:	12
+Release:	14
 Summary:	C++ JSON Library
 License:	Public Domain
 Group:		System/Libraries
@@ -81,3 +81,36 @@ cp -r include/json %{buildroot}%{_includedir}/jsoncpp
 %{_libdir}/lib%{name}.so
 %dir %{_includedir}/%{name}
 %{_includedir}/%{name}/*
+
+
+%changelog
+* Tue Apr 26 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 0.5.0-12
++ Revision: 659457
+- build with %%optflags & %%ldflags
+
+* Tue Apr 26 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 0.5.0-11
++ Revision: 659396
+- add soname (P0)
+- cleanup
+
+* Fri Jul 30 2010 Nicolas Vigier <nvigier@mandriva.com> 0.5.0-9mdv2011.0
++ Revision: 563704
+- fix post
+
+* Fri Jul 30 2010 Nicolas Vigier <nvigier@mandriva.com> 0.5.0-8mdv2011.0
++ Revision: 563691
+- fix filename for .so file
+
+* Fri Jul 30 2010 Nicolas Vigier <nvigier@mandriva.com> 0.5.0-7mdv2011.0
++ Revision: 563645
+- add jsoncpp-devel and libjsoncpp-devel provides
+
+* Fri Jul 30 2010 Stéphane Laurière <slauriere@mandriva.com> 0.5.0-6mdv2011.0
++ Revision: 563409
++ rebuild (emptylog)
+
+* Thu Jul 29 2010 Stéphane Laurière <slauriere@mandriva.com> 0.5.0-5mdv2011.0
++ Revision: 563220
+- updated group and file attributes
+- first release, based on Caixa M?\195?\161gica's jsoncpp
+

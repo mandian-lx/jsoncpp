@@ -1,9 +1,16 @@
 %bcond_with	docs
+#XXX: Hardcoded GCC version
+%define	gcc_ver	%(gcc -dumpversion)
+%define	library	libjson_linux-gcc-%{gcc_ver}_libmt.so
+# XXX: There isn't really any major due to lack of SONAME :/
+%define major	0
+%define	libname	%mklibname %{name} %{major}
+%define	devname	%mklibname -d %{name}
 
+Summary:	C++ JSON Library
 Name:		jsoncpp
 Version:	0.5.0
 Release:	14
-Summary:	C++ JSON Library
 License:	Public Domain
 Group:		System/Libraries
 Url:		http://jsoncpp.sourceforge.net/
@@ -13,7 +20,8 @@ Patch1:		jsoncpp-0.5.0-cflags-ldflags.patch
 BuildRequires:	scons 
 #To generate docs
 %if %{with docs}
-BuildRequires:	doxygen graphviz
+BuildRequires:	doxygen 
+BuildRequires:	graphviz
 %endif
 
 %description
@@ -24,11 +32,6 @@ It can also preserve existing comment in unserialization/serialization steps,
 making it a convenient format to store user input files.
 
 Unserialization parsing is user friendly and provides precise error reports.
-
-# XXX: There isn't really any major due to lack of SONAME :/
-%define major	0
-%define	libname	%mklibname %{name} %{major}
-%define	devname	%mklibname -d %{name}
 
 %package -n	%{libname}
 Summary:	JsonCpp library
@@ -53,9 +56,8 @@ Requires:	%{libname} = %{EVRD}
 Files for building applications with %{name} support.
 
 %prep 
-%setup -q -n jsoncpp-src-%{version}
-%patch0 -p1 -b .soname~
-%patch1 -p1 -b .flags~
+%setup -qn jsoncpp-src-%{version}
+%apply_patches
 
 %build
 CXXFLAGS="%{optflags}" LINKFLAGS="%{ldflags}" scons platform=linux-gcc
@@ -63,9 +65,6 @@ CXXFLAGS="%{optflags}" LINKFLAGS="%{ldflags}" scons platform=linux-gcc
 
 %install
 #Scons file is missing an 'install' target
-#XXX: Hardcoded GCC version
-%define	gcc_ver	%(gcc -dumpversion)
-%define	library	libjson_linux-gcc-%{gcc_ver}_libmt.so
 install -m755 buildscons/linux-gcc-%{gcc_ver}/src/lib_json/%{library} -D %{buildroot}%{_libdir}/%{library}
 ln -s %{library} %{buildroot}%{_libdir}/lib%{name}.so.0
 ln -s %{library} %{buildroot}%{_libdir}/lib%{name}.so
@@ -81,36 +80,4 @@ cp -r include/json %{buildroot}%{_includedir}/jsoncpp
 %{_libdir}/lib%{name}.so
 %dir %{_includedir}/%{name}
 %{_includedir}/%{name}/*
-
-
-%changelog
-* Tue Apr 26 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 0.5.0-12
-+ Revision: 659457
-- build with %%optflags & %%ldflags
-
-* Tue Apr 26 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 0.5.0-11
-+ Revision: 659396
-- add soname (P0)
-- cleanup
-
-* Fri Jul 30 2010 Nicolas Vigier <nvigier@mandriva.com> 0.5.0-9mdv2011.0
-+ Revision: 563704
-- fix post
-
-* Fri Jul 30 2010 Nicolas Vigier <nvigier@mandriva.com> 0.5.0-8mdv2011.0
-+ Revision: 563691
-- fix filename for .so file
-
-* Fri Jul 30 2010 Nicolas Vigier <nvigier@mandriva.com> 0.5.0-7mdv2011.0
-+ Revision: 563645
-- add jsoncpp-devel and libjsoncpp-devel provides
-
-* Fri Jul 30 2010 Stéphane Laurière <slauriere@mandriva.com> 0.5.0-6mdv2011.0
-+ Revision: 563409
-+ rebuild (emptylog)
-
-* Thu Jul 29 2010 Stéphane Laurière <slauriere@mandriva.com> 0.5.0-5mdv2011.0
-+ Revision: 563220
-- updated group and file attributes
-- first release, based on Caixa M?\195?\161gica's jsoncpp
 

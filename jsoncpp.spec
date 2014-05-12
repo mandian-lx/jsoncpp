@@ -9,12 +9,12 @@
 
 Summary:	C++ JSON Library
 Name:		jsoncpp
-Version:	0.5.0
-Release:	18
+Version:	0.6.0
+Release:	0.rc2
 License:	Public Domain
 Group:		System/Libraries
 Url:		http://jsoncpp.sourceforge.net/
-Source0:	%{name}-%{version}.tar.gz
+Source0:	http://downloads.sourceforge.net/project/jsoncpp/jsoncpp/%{version}-rc2/%{name}-src-%{version}-rc2.tar.gz
 Patch0:		jsoncpp-0.5.0-add-soname.patch
 Patch1:		jsoncpp-0.5.0-cflags-ldflags.patch
 BuildRequires:	scons 
@@ -56,10 +56,12 @@ Requires:	%{libname} = %{EVRD}
 Files for building applications with %{name} support.
 
 %prep 
-%setup -qn jsoncpp-src-%{version}
+%setup -qn jsoncpp-src-%{version}-rc2
 %apply_patches
 
 %build
+grep -e "-Wall" SConstruct
+sed 's/CCFLAGS = "-Wall"/CCFLAGS = "%{optflags}"/' -i SConstruct
 CXXFLAGS="%{optflags}" LINKFLAGS="%{ldflags}" scons platform=linux-gcc
 #Docs generation is broken at the moment, return to it ASAP 
 

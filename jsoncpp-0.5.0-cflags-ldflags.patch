@@ -1,8 +1,8 @@
---- jsoncpp-src-0.5.0/SConstruct~	2011-04-26 22:29:45.586057048 +0200
-+++ jsoncpp-src-0.5.0/SConstruct	2011-04-26 22:30:47.950277389 +0200
-@@ -108,6 +108,12 @@ elif platform.startswith('linux-gcc'):
+--- jsoncpp-1.6.0/SConstruct.0001~	2015-03-13 00:06:20.766007671 +0100
++++ jsoncpp-1.6.0/SConstruct	2015-03-13 00:07:03.257493470 +0100
+@@ -121,6 +121,12 @@ elif platform.startswith('linux-gcc'):
      env.Tool( 'default' )
-     env.Append( LIBS = ['pthread'], CCFLAGS = "-Wall" )
+     env.Append( LIBS = ['pthread'], CCFLAGS = os.environ.get("CXXFLAGS", "-Wall"), LINKFLAGS=os.environ.get("LDFLAGS", "") )
      env['SHARED_LIB_ENABLED'] = True
 +    if 'CXXFLAGS' in os.environ:
 +      env.Append( CXXFLAGS=" " + os.environ['CXXFLAGS'] + " " )

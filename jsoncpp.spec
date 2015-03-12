@@ -9,12 +9,12 @@
 
 Summary:	C++ JSON Library
 Name:		jsoncpp
-Version:	0.6.0
-Release:	0.rc2
+Version:	1.6.0
+Release:	1
 License:	Public Domain
 Group:		System/Libraries
 Url:		http://jsoncpp.sourceforge.net/
-Source0:	http://downloads.sourceforge.net/project/jsoncpp/jsoncpp/%{version}-rc2/%{name}-src-%{version}-rc2.tar.gz
+Source0:	https://github.com/open-source-parsers/jsoncpp/archive/%{version}.tar.gz
 Patch0:		jsoncpp-0.5.0-add-soname.patch
 Patch1:		jsoncpp-0.5.0-cflags-ldflags.patch
 BuildRequires:	scons 
@@ -56,7 +56,7 @@ Requires:	%{libname} = %{EVRD}
 Files for building applications with %{name} support.
 
 %prep 
-%setup -qn jsoncpp-src-%{version}-rc2
+%setup -q
 %apply_patches
 
 %build
@@ -74,7 +74,6 @@ mkdir -p %{buildroot}%{_includedir}
 cp -r include/json %{buildroot}%{_includedir}/jsoncpp
 
 %files -n %{libname}
-%doc README.txt 
 %{_libdir}/%{library}
 %{_libdir}/lib%{name}.so.0
 

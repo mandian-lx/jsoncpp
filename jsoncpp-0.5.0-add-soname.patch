@@ -1,18 +1,17 @@
---- jsoncpp-src-0.5.0/SConstruct~	2011-04-26 19:38:03.223854301 +0200
-+++ jsoncpp-src-0.5.0/SConstruct	2011-04-26 19:38:07.616799381 +0200
-@@ -179,8 +179,10 @@ def buildLibrary( env, target_sources, t
+--- jsoncpp-1.6.0/SConstruct.0000~	2015-03-13 00:02:03.248170771 +0100
++++ jsoncpp-1.6.0/SConstruct	2015-03-13 00:05:36.869540859 +0100
+@@ -192,8 +192,9 @@ def buildLibrary( env, target_sources, t
      global lib_dir
      env.Install( lib_dir, static_lib )
      if env['SHARED_LIB_ENABLED']:
-+	shlink_flags = '-shared -Wl,-soname -Wl,lib' + target_name + 'cpp.so.0'
++        shlink_flags = '-shared -Wl,-soname -Wl,lib' + target_name + 'cpp.so.0'
          shared_lib = env.SharedLibrary( target=target_name + '_${LIB_NAME_SUFFIX}',
 -                                        source=target_sources )
-+                                        source=target_sources,
-+                                        SHLINKFLAGS=shlink_flags )
++                                        source=target_sources, SHLINKFLAGS=shlink_flags )
          env.Install( lib_dir, shared_lib )
      env['SRCDIST_ADD']( source=[target_sources] )
  
-@@ -190,7 +192,7 @@ def buildProjectInDirectory( target_dire
+@@ -203,7 +204,7 @@ def buildProjectInDirectory( target_dire
      global build_dir
      target_build_dir = os.path.join( build_dir, target_directory )
      target = os.path.join( target_directory, 'sconscript' )

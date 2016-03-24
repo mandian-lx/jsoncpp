@@ -1,0 +1,26 @@
+From ef2ff8754a00c3c7f938683d4f815fa4d53cd8b2 Mon Sep 17 00:00:00 2001
+From: Christopher Dunn <cdunn2001@gmail.com>
+Date: Wed, 23 Mar 2016 22:33:18 -0500
+Subject: [PATCH] Fix a clang warning
+
+Resolves #451.
+---
+ src/lib_json/json_tool.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/lib_json/json_tool.h b/src/lib_json/json_tool.h
+index ec2b1f2..d16d7b8 100644
+--- a/src/lib_json/json_tool.h
++++ b/src/lib_json/json_tool.h
+@@ -63,7 +63,7 @@ typedef char UIntToStringBuffer[uintToStringBufferSize];
+ static inline void uintToString(LargestUInt value, char*& current) {
+   *--current = 0;
+   do {
+-    *--current = static_cast<signed char>(value % 10U + static_cast<unsigned>('0'));
++    *--current = static_cast<char>(value % 10U + static_cast<unsigned>('0'));
+     value /= 10;
+   } while (value != 0);
+ }
+-- 
+2.7.2
+

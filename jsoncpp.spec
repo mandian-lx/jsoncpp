@@ -5,7 +5,7 @@
 
 Summary:	C++ JSON Library
 Name:		jsoncpp
-Version:	1.7.2
+Version:	1.7.5
 Release:	1
 License:	Public Domain
 Group:		System/Libraries

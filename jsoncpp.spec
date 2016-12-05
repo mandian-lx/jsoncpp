@@ -1,23 +1,19 @@
 %bcond_with	docs
-#XXX: Hardcoded GCC version
-%define	gcc_ver	%(gcc -dumpversion)
-%define	library	libjson_linux-gcc-%{gcc_ver}_libmt.so
-# XXX: There isn't really any major due to lack of SONAME :/
-%define major	0
+%define major	1
 %define	libname	%mklibname %{name} %{major}
 %define	devname	%mklibname -d %{name}
 
 Summary:	C++ JSON Library
 Name:		jsoncpp
-Version:	0.5.0
-Release:	15
+Version:	1.7.5
+Release:	1
 License:	Public Domain
 Group:		System/Libraries
 Url:		http://jsoncpp.sourceforge.net/
-Source0:	%{name}-%{version}.tar.gz
-Patch0:		jsoncpp-0.5.0-add-soname.patch
-Patch1:		jsoncpp-0.5.0-cflags-ldflags.patch
-BuildRequires:	scons 
+Source0:	https://github.com/open-source-parsers/jsoncpp/archive/%{version}.tar.gz
+Patch0:		jsoncpp-1.6.0-work-around-i586-float-inaccuracy.patch
+BuildRequires:	cmake
+BuildRequires:	ninja
 #To generate docs
 %if %{with docs}
 BuildRequires:	doxygen 
@@ -56,28 +52,27 @@ Requires:	%{libname} = %{EVRD}
 Files for building applications with %{name} support.
 
 %prep 
-%setup -qn jsoncpp-src-%{version}
+%setup -q
 %apply_patches
+%cmake -G Ninja \
+	-DJSONCPP_LIB_BUILD_SHARED:BOOL=ON \
+	-DJSONCPP_LIB_BUILD_STATIC:BOOL=OFF \
+	-DJSONCPP_WITH_TESTS:BOOL=OFF \
+	-DJSONCPP_WITH_POST_BUILD_UNITTES:BOOL=OFF \
+	-DJSONCPP_WITH_CMAKE_PACKAGE:BOOL=ON
 
 %build
-CXXFLAGS="%{optflags}" LINKFLAGS="%{ldflags}" scons platform=linux-gcc
-#Docs generation is broken at the moment, return to it ASAP 
+export LD_LIBRARY_PATH=`pwd`/build/src/lib_json:$LD_LIBRARY_PATH
+ninja -C build
 
 %install
-#Scons file is missing an 'install' target
-install -m755 buildscons/linux-gcc-%{gcc_ver}/src/lib_json/%{library} -D %{buildroot}%{_libdir}/%{library}
-ln -s %{library} %{buildroot}%{_libdir}/lib%{name}.so.0
-ln -s %{library} %{buildroot}%{_libdir}/lib%{name}.so
-mkdir -p %{buildroot}%{_includedir}
-cp -r include/json %{buildroot}%{_includedir}/jsoncpp
+DESTDIR="%{buildroot}" ninja install -C build
 
 %files -n %{libname}
-%doc README.txt 
-%{_libdir}/%{library}
-%{_libdir}/lib%{name}.so.0
+%{_libdir}/lib%{name}.so.1*
 
 %files -n %{devname}
 %{_libdir}/lib%{name}.so
-%dir %{_includedir}/%{name}
-%{_includedir}/%{name}/*
-
+%{_includedir}/json
+%{_libdir}/cmake/jsoncpp
+%{_libdir}/pkgconfig/*.pc

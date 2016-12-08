@@ -11,6 +11,7 @@ License:	Public Domain
 Group:		System/Libraries
 Url:		http://jsoncpp.sourceforge.net/
 Source0:	https://github.com/open-source-parsers/jsoncpp/archive/%{version}.tar.gz
+Source100:	%{name}.rpmlintrc
 Patch0:		jsoncpp-1.6.0-work-around-i586-float-inaccuracy.patch
 BuildRequires:	cmake
 BuildRequires:	ninja
